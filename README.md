@@ -143,7 +143,7 @@ You can configure the evidence category frequencies for the benign observations 
 
 ## Evidence likelihoods
 
-The likelihoods of each type of ACMG/AMP evidence strength are defined as "strong", "moderate", "supporting", and "standalone".  These likelihoods match Tavtigian's Bayesian framework likelihoods which were shown to be equivalent tot he ACMG/AMP evidence strengths.  It's not recommended to change these values.
+The likelihoods of ACMG/AMP evidence strength for benign (`B`) and pathogenic (`P`) observations are defined as "strong" (e.g. `PS`, `BS`), "moderate" (e.g. `PM`), "supporting" (e.g. `PP`, `BP`), and "standalone" (not available for clinical data).  These likelihoods match Tavtigian's Bayesian framework likelihoods which were shown to be equivalent to the ACMG/AMP evidence strengths.  It's not recommended to change these values.
 
 ```console
     		"PS": 18.7,
@@ -175,4 +175,35 @@ The thresholds configured in the repository's `conf.json` file are shown below. 
 		"pathogenicThreshold": 2.0
 ```
 
-# Configure a simulation
+# Configure an experiment
+
+To configure an experimental run, update the following parameters.  
+* `name`:		name to give your experiment
+* `nSmall`:		number of "small" sequencing centers participating in experiment
+* `nMedium`:		number of "medium" sequencing centers participating in experiment
+* `nLarge`:		number of "large" sequencing centers participating in experiment
+* `numVariants`:	number of variants to simultaneously experiment
+* `frequency`:		allele frequency for variant in experiment
+* `years`:		number of years over which to run the simulation
+* `seed`:		integer seed for random number generation
+* `numThreads`:		number of CPU threads to allocate to experiment
+
+
+```console
+	"simulation": {
+		"name": "mySim",
+		"nSmall": 10,
+		"nMedium": 7,
+		"nLarge": 3,
+		"numVariants": 1000,
+		"frequency": 1e-5,
+		"years": 5,
+		"seed": 18,
+		"numThreads": 2
+	}
+
+``` 
+
+
+# Run an experiment
+
