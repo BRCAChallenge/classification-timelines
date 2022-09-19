@@ -21,9 +21,119 @@ $ cd classification-timelines
 # Configure a simulation.
 All the configuration information for a simulation is stored in a JSON file. 
 
-* You can configure the `small`, `medium`, and `large` initial sizes and annual testing rates for your experiment. 
+1. You can configure the `small`, `medium`, and `large` initial sizes and annual testing rates for your experiment by editing the following JSON code block:
+
+```console
+		"smallInitialSize": 15000,
+		"smallTestsPerYear": 3000,
+		"mediumInitialSize": 150000,
+		"mediumTestsPerYear": 30000,
+		"largeInitialSize": 1000000,
+		"largeTestsPerYear": 450000,
+```
 
 
+2. You can configure the evidence category frequencies for the pathogenic observations by editing the `low`, `med`, and `hi` values in the following JSON code block.  Note that the `med` value is used for the simulations, and the `low` and `hi` values are used only for the sensitivity analysis.
+
+```console
+		"p0": {
+			"low": 0,
+			"med": 0,
+			"hi": 0
+			},
+		"p1_PM3": {
+			"low": 0,
+			"med": 0,
+			"hi": 0
+			},
+    		"p2_PM6": {
+			"low": 0.0014,
+			"med": 0.007,
+			"hi": 0.025
+			},
+    		"p3_BS2": {
+			"low": 0,
+			"med": 0,
+			"hi": 0
+			},
+    		"p4_BP2": {
+			"low": "0.001 * self.frequency",
+			"med": "0.005 * self.frequency",
+			"hi": "0.02 * self.frequency"
+			},
+    		"p5_BP5": {
+			"low": 0.00002,
+			"med": 0.0001,
+			"hi": 0.0021505376
+			},
+    		"p6_PP1": {
+			"low": 0.05,
+			"med": 0.23,
+			"hi": 0.67
+			},
+    		"p7_PS2": {
+			"low": 0.0006,
+			"med": 0.003,
+			"hi": 0.02
+			},
+    		"p8_BS4": {
+			"low": 0.0001,
+			"med": 0.001,
+			"hi": 0.17
+			},
+
+```
+
+
+3. You can configure the evidence category frequencies for the benign observations by editing the `low`, `med`, and `hi` values in the following JSON code block.  Note that the `med` value is used for the simulations, and the `low` and `hi` values are used only for the sensitivity analysis.
+
+```console
+   		"b0": {
+			"low": 0,
+			"med": 0,
+			"hi": 0
+			},
+    		"b1_PM3": {
+			"low": 0,
+			"med": 0,
+			"hi": 0
+			},
+    		"b2_PM6": {
+			"low": 0.0007,
+			"med": 0.0035,
+			"hi": 0.01
+			},
+    		"b3_BS2": {
+			"low": 0,
+			"med": 0,
+			"hi": 0
+			},
+    		"b4_BP2": {
+			"low": "self.frequency",
+			"med": "self.frequency",
+			"hi": "self.frequency"
+			},
+    		"b5_BP5": {
+			"low": 0.038,
+			"med": 0.099,
+			"hi": 0.36
+			},
+		"b6_PP1": {
+			"low": 0.005,
+			"med": 0.01,
+			"hi": 0.0625
+			},
+    		"b7_PS2": {
+			"low": 0.0001,
+			"med": 0.0015,
+			"hi": 0.005
+			},
+    		"b8_BS4": {
+			"low": 0.025,
+			"med": 0.1,
+			"hi": 0.4063
+			},
+```
 
 ## Permute the expression data and the metadata 
 IMPORTANT: Run the following steps to permute the data and metadata so that the samples are in the same order in both the expression file and the metadata file.  The GAN training algorithm assumes the samples are in the same order, and if they are not, it will produce jibberish results.
