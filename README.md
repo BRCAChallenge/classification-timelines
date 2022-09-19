@@ -18,10 +18,12 @@ $ git clone https://github.com/BRCAChallenge/classification-timelines
 $ cd classification-timelines 
 ```
 
-# Configure a simulation.
+# Edit model constants in the `conf.json` file according to your experiment. 
 All the configuration information for a simulation is stored in a JSON file. 
 
-1. You can configure the `small`, `medium`, and `large` initial sizes and annual testing rates for your experiment by editing the following JSON code block:
+## Update the sequencing center sizes and testing rates 
+
+You can configure the `small`, `medium`, and `large` initial sizes and annual testing rates for your experiment by editing the following JSON code block:
 
 ```console
 		"smallInitialSize": 15000,
@@ -33,7 +35,9 @@ All the configuration information for a simulation is stored in a JSON file.
 ```
 
 
-2. You can configure the evidence category frequencies for the pathogenic observations by editing the `low`, `med`, and `hi` values in the following JSON code block.  Note that the `med` value is used for the simulations, and the `low` and `hi` values are used only for the sensitivity analysis.
+## Update the evidence category frequencies for pathogenic observations.
+
+You can configure the evidence category frequencies for the pathogenic observations by editing the `low`, `med`, and `hi` values in the following JSON code block.  Note that the `med` value is used for the simulations, and the `low` and `hi` values are used only for the sensitivity analysis.
 
 ```console
 		"p0": {
@@ -85,7 +89,9 @@ All the configuration information for a simulation is stored in a JSON file.
 ```
 
 
-3. You can configure the evidence category frequencies for the benign observations by editing the `low`, `med`, and `hi` values in the following JSON code block.  Note that the `med` value is used for the simulations, and the `low` and `hi` values are used only for the sensitivity analysis.
+## Edit the evidence category frequencies for benign observations
+
+You can configure the evidence category frequencies for the benign observations by editing the `low`, `med`, and `hi` values in the following JSON code block.  Note that the `med` value is used for the simulations, and the `low` and `hi` values are used only for the sensitivity analysis.
 
 ```console
    		"b0": {
@@ -135,161 +141,38 @@ All the configuration information for a simulation is stored in a JSON file.
 			},
 ```
 
-## Permute the expression data and the metadata 
-IMPORTANT: Run the following steps to permute the data and metadata so that the samples are in the same order in both the expression file and the metadata file.  The GAN training algorithm assumes the samples are in the same order, and if they are not, it will produce jibberish results.
+## Evidence likelihoods
 
-1. Examine the first column of the original expression data and first row of the original meta data.  Note that they are not the same.
-```console
-$ sed -n '1,1 p' examples/data/expr.csv | awk -F, '{print $2}' 
-
-$ sed -n '2,2 p' examples/data/meta.csv | awk -F, '{print $1}'
-```
-
-2. Run the `permuteSamples.py` script.  
-* `-e` option specifies the expression data file 
-* `-m` option specifies the metadata file
-* `-mk` option specifies the metadata key 
-* `-ek` option specifies the expression data key 
+The likelihoods of each type of ACMG/AMP evidence strength are defined as "strong", "moderate", "supporting", and "standalone".  These likelihoods match Tavtigian's Bayesian framework likelihoods which were shown to be equivalent tot he ACMG/AMP evidence strengths.  It's not recommended to change these values.
 
 ```console
-$ python utils/permuteSamples.py -e examples/data/expr.csv -m examples/data/meta.csv -mk Sample -ek gene
-```
+    		"PS": 18.7,
+    		"PM": 4.3,
+    		"PP": 2.08,
+    		"BS": 0.053475935828877004,
+    		"BP": 0.4807692307692307,
 
+``` 
 
-3. Examine the first column of the permuted expression data and first row of the permuted meta data.  Note that they are the same.
+## Pathogenic selection factor
 
-```console
-$ sed -n '1,1 p' examples/data/expr_permuted.csv | awk -F, '{print $2}' 
-
-$ sed -n '2,2 p' examples/data/meta_permuted.csv | awk -F, '{print $1}'
-```
-
-
-## Reduce the dimensionality of the original data set. 
-To reduce the number of rows (genes) in a data set, perform the following steps:
-
-1. Run the `wc` command to determine the number of genes  
+Healthy people from healthy families are underrepresented in many forms of genetic testing. Accordingly, patients with pathogenic variants are observed (or ascertained) more often than those with benign variants, and the forms of evidence that support a pathogenic interpretation accumulate more quickly. How much more likely a person is to present pathogenic evidence than benign evidence is captured in our model as a configurable real-valued constant.
 
 ```console
-$ wc -l examples/data/expr_permuted.csv 
+    		"PSF": 2.0,
+
 ```
 
-2. Run the `reduceDim.py` script. The options are described below:
-* `-n` option specifies the number of genes with the highest variance to keep
-* `-d` option specifies the difference threshold between the highest and lowest expression level below which genes should be removed
-* `-a` option specifies the percentage threshold (out of 100) of genes with zero expression above which genes should be removed
-* `-e` option specifies the input expression file.
+## Evidence thresholds
+
+The thresholds configured in the repository's `conf.json` file are shown below.  These match Tavtigian's Bayesian framework thresholds which were shown to be equivalent to the ACMG/AMP evidence thresholds.  It's not recommended to change these values.
 
 ```console
-$ python utils/reduceDim.py -e examples/data/expr_permuted.csv -n 25000 -d 10 -a 90
+		"benignThreshold": -3,
+		"likelyBenignThreshold": -1.256958152560932,
+		"neutralThreshold": 0,
+		"likelyPathogenicThreshold": 1.256958152560932,
+		"pathogenicThreshold": 2.0
 ```
 
-3. Run the `wc` command to determine number of genes after reduction. 
-```console
-$ wc -l examples/data/expr_permuted__reduced_25000_10_0.9.csv 
-```
-
-## Increase the number of technical replicates  
-To increase the number of technical replicates, perform the following steps:
-
-1. Determine the number of samples in the original data set.
-```console
-$ wc -l examples/data/meta_permuted.csv  
-```
-
-2. Run the `statistically_technical_replicate.py` script.
-* `-e` specifies the input expression file
-* `-m` specifies the input metadata file
-* `-n` specifies the number of times more samples to create
-* `-v` specifies the variance to use for the zero-mean gaussian sampling
-* `-k` specifies the metadata key
-
-```console
-$ python utils/statistically_technical_replicate.py \
--e examples/data/expr_permuted__reduced_25000_10_0.9.csv \
--m examples/data/meta_permuted.csv \
--n 50 \
--v 10 \
--k 'Sample'
-```
-
-3. Determine the number of samples in the amplified data set.
-```console
-$ wc -l examples/data/meta_permuted__expanded_50_10.0.csv  
-```
-
-## Use a GAN to generate a fake data set
-To create a synthetic gene expression data set, perform the following steps:
-
-1. Create a meta JSON file to indicate which meta data are numerical and which are categorical.
-```console
-$ cat examples/data/meta.json 
-```
-
-2. Make an output directory
-```console
-$ mkdir /tmp/gan-out 
-```
-
-
-3. Run the `gen_fake_expr.py` script.  Note that this script will take several minutes to run. The number of epochs we define here as 10 is fewer than desired for the accuracy of the GAN, but for the sake of quickly getting results to examine, the value is set is intentionally low.  Set the number of epochs to 100 or higher to get more realistic, fake generated expression data.
-* `-ie` is the input expression file
-* `-im` is the input metadata file
-* `-od` is the output directory
-* `-umf` is the JSON file defining which categorical and numerical values to use
-* `-e` is the number of epochs
-* `-s` is the seed for the random number generator
-* `-cd` is the checkpoint directory
-
-```console
-$ python GAN/gen_fake_expr.py \
--ie examples/data/expr_permuted__reduced_25000_10_0.9__expanded_50_10.0.csv  \
--im examples/data/meta_permuted__expanded_50_10.0.csv \
--od  /tmp/gan-out  \
--umf examples/data/meta.json \
--e 10 \
--s 23 \
--cd /tmp/gan-out
-```
-
-3. Examine the output
-```console
-$ ls -R /tmp/gan-out 
-```
-
-## Compare PCA plots 
-To compare the PCA plots of original expression data to replicated data and generated fake data, run the following steps. 
-
-1. Create a meta.json file mapping meta data as either numerical or categorical
-
-```console
-$ cat examples/data/meta.json 
-```
-
-2. Run the `plotters.py` script.
-* `-ie` defines the input expression data file
-* `-im` defines the input metadata file
-* `-umf` defines the metadata JSON file which maps parameters as numerical or categorical
-* `-od` defines the output directory
-
-```console
-$ python utils/plotters.py \
--ie examples/data/expr_permuted.csv  \
--im examples/data/meta_permuted.csv \
--umf examples/data/meta.json \
--od /tmp/gan-out
-```
-
-3. Examine the output to compare PCA plots
- 
-```console
-$ open /tmp/gan-out/libPrep*.png
-$ open /tmp/gan-out/mission*.png
-```
-
-## NOTES
-We've found the following values to be optimal when generating RNA-seq data on NASA GLDS samples:
-
-```console
- -ld 64 -bs 16 -nl 2 -hd 256 -lr 5e-04 -nb 5
-```
+# Configure a simulation
