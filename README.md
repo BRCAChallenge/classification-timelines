@@ -210,7 +210,22 @@ To configure an experimental run, update the following parameters.
 
 ``` 
 
+*NOTE* We recommend running at least 100 variants to simultaneously experiment with so that the distributions of evidence are sufficiently dense as to show a trend. 
 
-# Run an experiment
+# Run a simulation experiment
+
+After configuring the conf.json file according to your experiment, run the following command to execute the experiment.
+* `-c`	path to configuration file
+* `-o`	path to output directory
+* `-j`	job type (simulate or analyze) 
+
+```console
+	$ python Variant_Classification_Model.py -c conf.json -o . -j simulate
+
+```
+
+
+
+# Run a sensitivity analysis of your parameters
 
 
