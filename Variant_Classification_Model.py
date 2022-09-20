@@ -518,7 +518,7 @@ def main():
     elif jobType == 'analyze':
         print('analyzing!')
         allLRPs = runAnalysis(types, parameters, config, outputDir)
-        utils.saveAllLRPs(types, parameters, allLRPs, outputDir)
+        utils.saveAllLRPs(allLRPs, outputDir)
     else:
         print('whats this?: ' + str(jobType))
 
