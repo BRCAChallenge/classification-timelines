@@ -5,7 +5,7 @@ Many genetic variants are classified, but many more are designated as variants o
 Our software models accumulation of clinical data and their impact on variant interpretation to illustrate the time and probability for variants to be classified when clinical laboratories share evidence, when they silo evidence, and when they share only variant interpretations. 
 
 
-# Clone the repo.
+# Clone the repo and install dependencies
 1. Clone this github repository to your local system. 
 
 ```console
@@ -16,6 +16,12 @@ $ git clone https://github.com/BRCAChallenge/classification-timelines
 
 ```console
 $ cd classification-timelines 
+```
+
+3. Install dependendencies in your Python environment
+
+```console
+$ pip install -r requirements.txt
 ```
 
 # Edit model constants in the `conf.json` file according to your experiment. 
