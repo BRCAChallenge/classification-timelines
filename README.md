@@ -214,18 +214,53 @@ To configure an experimental run, update the following parameters.
 
 # Run a simulation experiment
 
-After configuring the conf.json file according to your experiment, run the following command to execute the experiment.
+## Generate the results
+
+1. Make a directory to store the output.
+```console
+	$ mkdir /tmp/simulate
+```
+
+2. Run the following command to execute the experiment.
 * `-c`	path to configuration file
 * `-o`	path to output directory
-* `-j`	job type (simulate or analyze) 
+* `-j`	job type (simulate) 
 
 ```console
-	$ python Variant_Classification_Model.py -c conf.json -o . -j simulate
+	$ python Variant_Classification_Model.py -c conf.json -o /tmp/simulate -j simulate
 
 ```
 
+## Examine the results
+After running the experiment, examine the `.png` file generated in the output directory you specified.
 
+```console
+	$ open /tmp/simulate/*.png
+```
 
 # Run a sensitivity analysis of your parameters
 
 
+## Generate the results
+
+1. Make a directory to store the output.
+```console
+	$ mkdir /tmp/analyze
+```
+
+2. Run the following command to execute the experiment.
+* `-c`	path to configuration file
+* `-o`	path to output directory
+* `-j`	job type (analyze) 
+
+```console
+	$ python Variant_Classification_Model.py -c conf.json -o /tmp/analyze -j analyze
+
+```
+
+## Examine the results
+After running the experiment, examine the `.png` file generated in the output directory you specified.
+
+```console
+	$ open /tmp/analyze/*.png
+```
