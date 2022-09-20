@@ -21,7 +21,7 @@ def save_config(confFile, outputDir):
 def saveAllLRPs(allLRPs, outputDir):
     fileName = outputDir + '/allLRPs.csv'
     with open(fileName, 'w') as f:
-        f.write(allLRPs)
+        f.write(str(allLRPs))
     f.close()
 
 def saveProbability(simulation, center, outputDir):
