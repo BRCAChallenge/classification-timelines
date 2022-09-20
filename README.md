@@ -18,7 +18,7 @@ $ git clone https://github.com/BRCAChallenge/classification-timelines
 $ cd classification-timelines 
 ```
 
-3. Install dependendencies in your Python environment
+3. Install dependendencies in your Python 3.x environment (Python 2.x is not supported).
 
 ```console
 $ pip install -r requirements.txt
