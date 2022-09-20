@@ -24,16 +24,16 @@ def saveAllLRPs(types, parameters, allLRPs, outputDir):
     fileName = outputDir + '/allLRPs.csv'
     indices = ['benign', 'pathogenic']
     with open(fileName, 'w') as f:
-        print('parameters: ', end=' ', file=f)
+        print('parameters: ', file=f)
         for p in parameters:
-            print(p, end=',', file=f)
+            print(p,  file=f)
         for t in types:
             print(t, file=f)
             for i in indices:
-                print(t + '_' + i + ': ', end=',', file=f)
+                print(t + '_' + i + ': ',  file=f)
                 for p in parameters:
                     #print(str(simulation.constants[p][t]) + '=' + str(allLRPs[t][p][i]), end=' ', flush=True, file=f)
-                    print(allLRPs[t][p], end=' ', flush=True, file=f)
+                    print(allLRPs[t][p],  flush=True, file=f)
                 print(file=f)
             print(file=f)
     f.close()
