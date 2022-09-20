@@ -224,9 +224,9 @@ class Simulation:
         print("variant: " + str(variant) + " year: " + str(year))
         for centerList in self.centerListList:
             for center in centerList:
-                print("center: " + center.name, end= ",")
-                print("P prob: " + str(center.pathogenicProbabilities[year]), end=",")
-                print("LP prob: " + str(center.likelyPathogenicProbabilities[year]))
+                print("\tcenter: " + center.name)
+                print("\tP prob: " + str(center.pathogenicProbabilities[year]))
+                print("\tLP prob: " + str(center.likelyPathogenicProbabilities[year]))
         print("classification: " + self.pathogenicVariantClassifications[year][variant])
 
     def mergeDataFromThread(self, center, q):

@@ -73,9 +73,9 @@ def plotLRPHist(simulation, center, year, outputDir):
             if len(lrList) != 0:
                 benign_x.append(center.benignLRPs[variant][year])
 
-    if centerName == 'all':
+    '''if centerName == 'all':
         print('max path x  = ' + str(max(pathogenic_x)))
-        print('min ben x  = ' + str(max(benign_x)))
+        print('min ben x  = ' + str(max(benign_x)))'''
 
     # TODO calculate the plot limits dynamically, not hard-coded
     ax = plt.figure(figsize=(8, 6)).gca()
